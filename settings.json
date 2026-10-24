@@ -1,0 +1,17 @@
+{
+  "Boxes": true,
+  "Names": true,
+  "Distances": true,
+  "Status": true,
+  "AimEnabled": true,
+  "ShowFov": true,
+  "TargetMarker": true,
+  "FovRadius": 283,
+  "Sensitivity": 20,
+  "Smoothness": 4.5,
+  "MaxDistance": 1500,
+  "AimAtHead": true,
+  "AimLock": true,
+  "AimMethod": 0,
+  "TargetPriority": 0
+}
