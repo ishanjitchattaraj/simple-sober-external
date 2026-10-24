@@ -1,4 +1,4 @@
-# Sober C# / Dear ImGui overlay
+# Sober C# External
 
 This .NET 10 application uses Dear ImGui and OpenTK/OpenGL to draw an external X11 overlay. The helper reads process memory. Mouse aim sends relative X11 mouse motion through XTest. Camera aim writes only the camera rotation matrix through a dedicated validated bridge operation; it leaves camera position unchanged. Neither mode injects code.
 
