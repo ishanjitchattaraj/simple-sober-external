@@ -70,3 +70,4 @@
 /home/i/sober-imgui/obj/Release/net10.0/SoberImGui.pdb
 /home/i/sober-imgui/obj/Release/net10.0/sober-imgui.genruntimeconfig.cache
 /home/i/sober-imgui/obj/Release/net10.0/ref/SoberImGui.dll
+/home/i/sober-imgui/obj/Release/net10.0/sober-imgui.sourcelink.json

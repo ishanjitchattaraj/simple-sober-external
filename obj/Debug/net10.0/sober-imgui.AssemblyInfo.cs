@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SoberImGui")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+138b728f55dcf0feb77d007bd9688490be80b6fc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d59cdbc52cf5ea20122f8e868cb673b7bbcae793")]
 [assembly: System.Reflection.AssemblyProductAttribute("SoberImGui")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SoberImGui")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -31,6 +31,9 @@ public static class ExplorerTests
   var first=ExplorerReader.Read(Memory(),scene,0,0,CancellationToken.None);
   Check(first.Node.Address==root&&first.Node.ClassName=="DataModel","game root/class lookup");
   Check(first.Total==130&&first.Children.Count==128&&first.NextOffset==128,"first page bounds");
+  var bounded=Memory().ChildrenPageChecked(root,0,128);
+  Check(bounded.Total==130&&bounded.Children.Count==128,"bounded scan must read at most one child page");
+  try{Memory().ChildrenPageChecked(root,0,129);throw new Exception("child scanner accepted a page over its hard budget");}catch(IOException){}
   var second=ExplorerReader.Read(Memory(),scene,root,first.NextOffset,CancellationToken.None);
   Check(second.Children.Count==2&&second.NextOffset==130&&second.Offset==128,"second page bounds");
   Check(!first.Children.Select(n=>n.Address).Intersect(second.Children.Select(n=>n.Address)).Any(),"pagination repeated a child");

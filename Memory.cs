@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 namespace SoberEsp;
@@ -22,9 +23,9 @@ public sealed class MemoryBridge(string path)
   using var json=Request(new{op="maps"});var root=json.RootElement;
   return new(root.GetProperty("pid").GetInt32(),root.GetProperty("maps").EnumerateArray().Select(r=>new Mapping(r.GetProperty("start").GetUInt64(),r.GetProperty("end").GetUInt64(),r.GetProperty("permissions").GetString()!,r.GetProperty("offset").GetUInt64(),r.GetProperty("path").GetString()!)).ToList());
  }
- public void AimCamera(CameraContext context,ulong model,bool head,float response)
+ public void AimCamera(CameraContext context,ulong model,bool head,float response,Vector3 velocity=default,float leadSeconds=0,float gravity=0)
  {
-  using var json=Request(new{op="aim_camera",pid=context.Pid,baseAddress=context.Base,workspace=context.Workspace,camera=context.Camera,model,head,response});
+  using var json=Request(new{op="aim_camera",pid=context.Pid,baseAddress=context.Base,workspace=context.Workspace,camera=context.Camera,model,head,response,velocity=new{x=velocity.X,y=velocity.Y,z=velocity.Z},leadSeconds,gravity});
  }
  public byte[] Read(ulong address,int length)
  {
@@ -60,5 +61,17 @@ public sealed class SceneMemory(Func<ulong,int,byte[]> readMemory)
   var data=Read(begin,(int)(end-begin));var result=new List<ulong>();
   for(int i=0;i<data.Length;i+=Offsets.Instance.ChildStride){ulong p=BinaryPrimitives.ReadUInt64LittleEndian(data.AsSpan(i));if(p!=0)result.Add(p);}
   return result;
+ }
+ public (List<ulong> Children,int Total) ChildrenPageChecked(ulong address,int offset,int limit)
+ {
+  if(limit<1||limit>128||offset<0)throw new IOException("Invalid child page");
+  ulong vector=U64(address+Offsets.Instance.Children);if(vector==0)return([],0);
+  ulong begin=U64(vector+Offsets.Instance.ChildrenBegin),end=U64(vector+Offsets.Instance.ChildrenEnd);
+  if(end<begin||end-begin>160000|| (end-begin)%Offsets.Instance.ChildStride!=0)throw new IOException("Instance children changed or are invalid");
+  int total=(int)((end-begin)/Offsets.Instance.ChildStride);if(offset>total)throw new IOException("Children changed; refresh this branch");
+  int take=Math.Min(limit,total-offset);if(take==0)return([],total);
+  ulong start=begin+(ulong)offset*Offsets.Instance.ChildStride;byte[] data=Read(start,take*Offsets.Instance.ChildStride);var result=new List<ulong>(take);
+  for(int i=0;i<data.Length;i+=Offsets.Instance.ChildStride){ulong child=BinaryPrimitives.ReadUInt64LittleEndian(data.AsSpan(i));if(child!=0)result.Add(child);}
+  return(result,total);
  }
 }

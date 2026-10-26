@@ -20,6 +20,9 @@ public static class Offsets
  public static class Players {public const ulong LocalPlayer=0x110;}
  public static class Player {public const ulong Character=0x240;}
  public static class Part {public const ulong Primitive=0x168, Position=0xd4;}
+ // Property getters run through the generic callback at ELF VA 0x2f4f538,
+ // which adjusts the Humanoid Instance by +0xa0 before invoking the getter.
+ public static class Humanoid {public const ulong Health=0x170, MaxHealth=0x188, WalkSpeed=0x1b0;}
  public static class Camera
  {
   public const ulong Frame=0xc0, Viewport=0x274;
